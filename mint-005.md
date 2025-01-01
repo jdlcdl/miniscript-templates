@@ -6,11 +6,11 @@
 
 To provide a custody arrangement in which an owner of bitcoin (Principal) is able to secure bitcoin by working with an Agent. Unlike existing collaborative custody models up to this point, **where bitcoin keys WITHIN a multisig threshold are shared between Principals and agents**, a joint custody model by default requires a threshold of keys by both the Agent & Principal for movement of funds.
 
-This introduces a concept of "Negative Control" where, by default, funds are not able to be moved unless both the Principal and Agent sign the transaction.
+This introduces a concept of "Negative Control" where, by default, funds are not able to be moved unless both the Principal and Primary Agent sign the transaction.
+
+In the unlikely event the Principal has lost 2 of their 3 keys, a timelock enabled threshold allows only 1 of 3 keys from the Principal to be signed with the Primary Agent.
 
 In the event the Principal loses access to all of their keys, a secondary agent is available to work with the Primary Agent such that funds can be recovered after a set period of time.
-
-In the unlikely event the Primary Agent has lost 2 of their 3 keys, a timelock enabled threshold allows  only 1 of 3 keys from the Primary Agent to be signed with the secondary agent.
 
 Finally, in the event the Principal no longer wishes to work with the agent, say after a contract expires, the custody defers to a set of recovery keys, which can be held either by the Principal, or their own delegated managers of the recovery keys. As a result, when enough time has passed, the Principal is able to move bitcoin unilaterally without having the Agent sign key material.
 
