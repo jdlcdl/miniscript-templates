@@ -214,21 +214,34 @@ For this example, the `smallest_epoch_timestamp` is: 1672531200 (Jan 1 2023, mid
 
 Signed by: $PK_1$, $PK_2$, $PAK_1$, $PAK_2$
 
-[Reference Testnet
+<!--
+The following transactions do not represent this mint and are inconsistent with the rest of this document:
+
+1 of 3 epochs are incorrect. For each of the sample transactions below, the little-endian 4byte values pushed before each op_cltv do not match the values above for smallest_, between_ and largest_ epoch_timestamps.  Instead they are for (Jan 1 '23, Jan 15 '23', and Dec 15 '22) respectively.
+
+As noted above, they're also out of order, which alters everything. The epoch for recovery Keys falls between the epoch relaxing Principal to 1-of-3 and the epoch allowing Secondary Agent to work with Primary Agent's 2-of-3.
+
+On a minor note: if looking only at the inputs for these 4 sample transactions, it appears that the wallet was funded months after the last epoch, so for each of the sample spends, all of the satisfiable spending conditions would have been available.
+
+I suspect that rob1ham may have much better sample transactions, perhaps even on mainnet, that would be better represent this great work.  For a future commit, better sample transactions and updating the timestamps to above to match them.
+
+
+[Reference Signet
 Transaction](https://mempool.space/signet/tx/2836d6af6b5c4bb01e926391f64771fb333193676040b24d4236ba0bb89a7008)
 
 ## Layer 2 Example Spend
 Signed by: $PK_1$, $PK_2$, $SAK$
 
-[Reference Testnet
+[Reference Signet
 Transaction](https://mempool.space/signet/tx/36aa3dfd0c7b4f4d8c7924c411e240920e4b4d36950ca59f68098b77162ae54d)
 
 ## Layer 3 Example Spend
-[Reference Testnet
+[Reference Signet
 Transaction](https://mempool.space/signet/tx/bc75e9c7bd62168134a6283a56c2a0bf3c872cc6703d9566f1851309d5ef7465)
 
 ## Layer 4 Example Spend
 Signed by: $RK_1$, $RK_2$
 
-[Reference Testnet
+[Reference Signet
 Transaction](https://mempool.space/signet/tx/1d35568360a3a11309c77c893142a0c0cf58ed9cfce981c5492c66fb795f1872)
+-->
