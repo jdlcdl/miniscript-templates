@@ -207,8 +207,50 @@ For this example, the `smallest_epoch_timestamp` is: 1672531200 (Jan 1 2023, mid
 - MINT-005 Output Descriptor:
 <code>wsh(andor(multi(2,$PAK_1$,$PAK_2$,$PAK_3$),or_i(and_v(v:pkh($SAK$),after(`between_epoch_timestamp`)),thresh(2,pk($PK_1$),s:pk($PK_2$),s:pk($PK_3$),snl:after(`smallest_epoch_timestamp`))),and_v(v:thresh(2,pkh($RK_1$),a:pkh($RK_2$),a:pkh($RK_3$)),after(`larget_epoch_timestamp`))))</code>
 
+<!--
+The following source-policy does not appear to perfectly compile to the Miniscript as in the MINT-005 Output Descriptor above.
+
+When compiling a very similar source policy at https://bitcoin.sipa.be/miniscript/, the resulting Miniscript 'identities' prefixing "after(smallest_epoch_timestamp)` become "sln:" instead of "snl:".
+
+Assertion to confirm: This plays no meaningful logical difference in the meaning of this mint (other than different bitcoin scripts and therefore different addresses between the two versions)!?!?
+
+...still, if it's possible to have another source-policy that perfectly compiles to the exact Miniscript descriptor, I'm interested in learning what that source policy was.
+
+Analyzing the "sln:" version of similar Miniscript shows:
+```
+s: or_i
+    false
+    n: after(smallest_epoch_timestamp)
+```
+whereas the "snl:" version of the MINT-005 Output Descriptor above shows:
+```
+s: n: or_i
+    false
+    after(smallest_epoch_timestamp)
+```
+
+The resulting bitcoin script structure changes as well.
+
+At the bottom, starting with the last `else` leg, the "sln:" version is:
+```
+    OP_ELSE
+      <smallest_epoch_timestamp> OP_CHECKLOCKTIMEVERIFY OP_0NOTEQUAL
+    OP_ENDIF
+    OP_ADD 2 OP_EQUAL
+```
+whereas the "snl:" version is:
+```
+    OP_ELSE
+      <smallest_epoch_timestamp> OP_CHECKLOCKTIMEVERIFY
+    OP_ENDIF
+    OP_0NOTEQUAL OP_ADD 2 OP_EQUAL
+```
+
+For a future commit: If there is another source policy that perfectly compiles to the same Miniscript as the descriptor, to update below.
+
 - Source Policy (FOR REFERENCE PURPOSES ONLY):
 <code>"or(99@and(thresh(2,pk($PAK_1$),pk($PAK_2$),pk($PAK_3$)),or(99@thresh(2,pk($PK_1$),pk($PK_2$),pk($PK_3$),after(`smallest_epoch_timestamp`)),and(pk($SAK$),after(`between_epoch_timestamp`)))),and(thresh(2,pk($RK_1$),pk($RK_2$),pk($RK_3)),after(`largest_epoch_timestamp`)))"</code>
+-->
 
 ## Layer 1 Example Spend
 
@@ -217,13 +259,13 @@ Signed by: $PK_1$, $PK_2$, $PAK_1$, $PAK_2$
 <!--
 The following transactions do not represent this mint and are inconsistent with the rest of this document:
 
-1 of 3 epochs are incorrect. For each of the sample transactions below, the little-endian 4byte values pushed before each op_cltv do not match the values above for smallest_, between_ and largest_ epoch_timestamps.  Instead they are for (Jan 1 '23, Jan 15 '23', and Dec 15 '22) respectively.
+1 of 3 epochs are incorrect. For each of the sample transactions below, the little-endian 4byte values pushed before each op_cltv do not match the values above for smallest_, between_ and largest_ epoch_timestamps.  Instead they are for (Jan 1 '23, Jan 15 '23', and Dec 15 '22) respectively (largest is smallest).
 
-As noted above, they're also out of order, which alters everything. The epoch for recovery Keys falls between the epoch relaxing Principal to 1-of-3 and the epoch allowing Secondary Agent to work with Primary Agent's 2-of-3.
+As noted above, they're also out of order, which alters everything. The epoch for recovery Keys falls between the epoch relaxing Principal to 1-of-3 and the epoch allowing the Secondary Agent to work with the Primary Agent's 2-of-3.
 
-On a minor note: if looking only at the inputs for these 4 sample transactions, it appears that the wallet was funded months after the last epoch, so for each of the sample spends, all of the satisfiable spending conditions would have been available.
+On a minor note: if looking only at the inputs for these 4 sample transactions, it appears that the wallet was funded months after the last epoch, so for each of the sample spends, all of the satisfiable spending conditions would have already been available.
 
-I suspect that rob1ham may have much better sample transactions, perhaps even on mainnet, that would be better represent this great work.  For a future commit, better sample transactions and updating the timestamps to above to match them.
+I suspect that rob1ham may have much better sample transactions, perhaps even on mainnet, that would better represent this great work.  For a future commit, better sample transactions and updating the epoch_timestamps above to match them.
 
 
 [Reference Signet
